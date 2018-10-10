@@ -1,5 +1,5 @@
 ---
-AWSTemplateFormatVersion: 2010-09-09
+AWSTemplateFormatVersion: "2010-09-09"
 Description: VPC definition.
 Metadata:
   Role: network
@@ -57,7 +57,7 @@ Resources:
     Properties:
       CidrBlock:
 
-        FindInMap: [Environments, Ref: Environment, VPCCidr]
+        Fn::FindInMap: [Environments, Ref: Environment, VPCCidr]
       EnableDnsHostnames: "true"
       Tags:
         - Key: Environment
@@ -127,7 +127,7 @@ Outputs:
         Sub: "${Environment}-private-acl"
   DnsIp:
     Value:
-      FindInMap: [ Environments, Ref: Environment, DnsIp ]
+      Fn::FindInMap: [ Environments, Ref: Environment, DnsIp ]
     Export:
       Name:
         Sub: "${Environment}-dns-ip"
