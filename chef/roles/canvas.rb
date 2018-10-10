@@ -5,5 +5,6 @@ run_list(
     "recipe[git]",
     "recipe[python]",
     "recipe[ruby]",
-    "recipe[nodejs]"
+    "recipe[nodejs]",
+    "recipe[canvas]"
   )
