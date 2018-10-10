@@ -9,28 +9,6 @@ Parameters:
     Type: String
     Default: mint
     AllowedPattern: ^(shared|production|staging|demo|mint|int-[a-z]+)$
-Outputs:
-  VPC:
-    Value: !Ref VPC
-    Export:
-      Name: !Sub "${Environment}-vpc"
-  VPCCidr:
-    Value: !GetAtt VPC.CidrBlock
-    Export:
-      Name: !Sub "${Environment}-vpc-cidr"
-  PublicAcl:
-    Value: !Ref PublicNetworkAcl
-    Export:
-      Name: !Sub "${Environment}-public-acl"
-  PrivateAcl:
-    Value: !Ref PrivateNetworkAcl
-    Export:
-      Name: !Sub "${Environment}-private-acl"
-  DnsIp:
-    Value: !FindInMap [ Environments, !Ref Environment, DnsIp ]
-    Export:
-      Name: !Sub "${Environment}-dns-ip"
-
 Mappings:
 # Assuming Export names must be unique within a region and AWS account.
   Environments:
@@ -114,3 +92,24 @@ Resources:
         Value: Private
       - Key: Role
         Value: vpc
+Outputs:
+  VPC:
+    Value: !Ref VPC
+    Export:
+      Name: !Sub "${Environment}-vpc"
+  VPCCidr:
+    Value: !GetAtt VPC.CidrBlock
+    Export:
+      Name: !Sub "${Environment}-vpc-cidr"
+  PublicAcl:
+    Value: !Ref PublicNetworkAcl
+    Export:
+      Name: !Sub "${Environment}-public-acl"
+  PrivateAcl:
+    Value: !Ref PrivateNetworkAcl
+    Export:
+      Name: !Sub "${Environment}-private-acl"
+  DnsIp:
+    Value: !FindInMap [ Environments, !Ref Environment, DnsIp ]
+    Export:
+      Name: !Sub "${Environment}-dns-ip"
