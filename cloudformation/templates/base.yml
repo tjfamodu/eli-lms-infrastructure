@@ -56,25 +56,30 @@ Resources:
     Type: "AWS::EC2::VPC"
     Properties:
       CidrBlock:
-        !FindInMap [Environments, !Ref Environment, VPCCidr]
+
+        FindInMap: [Environments, Ref: Environment, VPCCidr]
       EnableDnsHostnames: "true"
       Tags:
         - Key: Environment
-          Value: !Ref Environment
+          Value:
+            Ref: Environment
         - Key: Name
-          Value: !Sub "${Environment}-vpc"
+          Value:
+            Sub: "${Environment}-vpc"
         - Key: Role
           Value: vpc
   PublicNetworkAcl:
     Type: AWS::EC2::NetworkAcl
     Properties:
       VpcId:
-          !Ref VPC
+          Ref: VPC
       Tags:
       - Key: Name
-        Value: !Sub "${Environment}-public-acl"
+        Value:
+          Sub: "${Environment}-public-acl"
       - Key: Environment
-        Value: !Ref Environment
+        Value:
+          Ref: Environment
       - Key: Network
         Value: Public
       - Key: Role
@@ -82,34 +87,47 @@ Resources:
   PrivateNetworkAcl:
     Type: AWS::EC2::NetworkAcl
     Properties:
-      VpcId: !Ref VPC
+      VpcId:
+        Ref: VPC
       Tags:
       - Key: Name
-        Value: !Sub "${Environment}-private-acl"
+        Value:
+          Sub: "${Environment}-private-acl"
       - Key: Environment
-        Value: !Ref Environment
+        Value:
+          Ref: Environment
       - Key: Network
         Value: Private
       - Key: Role
         Value: vpc
 Outputs:
   VPC:
-    Value: !Ref VPC
+    Value:
+      Ref: VPC
     Export:
-      Name: !Sub "${Environment}-vpc"
+      Name:
+        Sub: "${Environment}-vpc"
   VPCCidr:
-    Value: !GetAtt VPC.CidrBlock
+    Value:
+      GetAtt: VPC.CidrBlock
     Export:
-      Name: !Sub "${Environment}-vpc-cidr"
+      Name:
+        Sub: "${Environment}-vpc-cidr"
   PublicAcl:
-    Value: !Ref PublicNetworkAcl
+    Value:
+      Ref: PublicNetworkAcl
     Export:
-      Name: !Sub "${Environment}-public-acl"
+      Name:
+      Sub: "${Environment}-public-acl"
   PrivateAcl:
-    Value: !Ref PrivateNetworkAcl
+    Value:
+      Ref: PrivateNetworkAcl
     Export:
-      Name: !Sub "${Environment}-private-acl"
+      Name:
+        Sub: "${Environment}-private-acl"
   DnsIp:
-    Value: !FindInMap [ Environments, !Ref Environment, DnsIp ]
+    Value:
+      FindInMap: [ Environments, Ref: Environment, DnsIp ]
     Export:
-      Name: !Sub "${Environment}-dns-ip"
+      Name:
+        Sub: "${Environment}-dns-ip"
