@@ -20,5 +20,10 @@
     "instance_type": "t3.xlarge",
     "ssh_username": "ubuntu",
     "ami_name": "tj-eli-test {{timestamp}}"
-  }]
+  }],
+  "provisioners": [{
+    "type": " chef-solo",
+    "cookbook_paths": ["../chef/cookbooks"],
+    "roles_path": "../chef/roles"
+    }]
 }
