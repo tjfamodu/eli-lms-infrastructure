@@ -6,5 +6,7 @@ run_list(
     "recipe[python]",
     "recipe[ruby]",
     "recipe[nodejs]",
+    "recipe[apache]",
+    "recipe[assets]",
     "recipe[canvas]"
   )
