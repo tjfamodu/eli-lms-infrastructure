@@ -20,10 +20,10 @@ describe package ('python') do
   it { should be_installed }
 end
 
-%w{ amazon_s3 database delayed_jobs domain file_store outgoing_mail security external_migration dynamic_settings }.each do |config|
+%w{ amazon_s3 database delayed_jobs domain file_store outgoing_mail security external_migration }.each do |config|
   describe file("/var/canvas/config/#{config}.yml") do
     it { should exist }
-    its('mode') { should eq '00400'}
+    its('mode') { should cmp '00400'}
     its('owner') {should eq 'canvasuser'}
   end
 end
