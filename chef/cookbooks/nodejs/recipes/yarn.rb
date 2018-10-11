@@ -11,7 +11,6 @@ end
 
 apt_package 'yarn' do
   action :install
-  version '1.9.4-1'
 end
 
 execute 'Run yarn install' do
