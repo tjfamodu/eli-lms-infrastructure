@@ -3,3 +3,11 @@ cookbook "chef-client"
 cookbook 'apache2', '~> 5.0.1'
 cookbook 'opsworks-audit', '~> 1.0.0', path: 'site-cookbooks/opsworks-audit' # optional
 # cookbook 'ssh-hardening'
+
+cookbook 'apache', path: 'cookbooks/apache'
+cookbook 'assets', path: 'cookbooks/assets'
+cookbook 'canvas', path: 'cookbooks/canvas'
+cookbook 'git', path: 'cookbooks/git'
+cookbook 'nodejs', path: 'cookbooks/nodejs'
+cookbook 'python', path: 'cookbooks/python'
+cookbook 'ruby', path: 'cookbooks/ruby'
