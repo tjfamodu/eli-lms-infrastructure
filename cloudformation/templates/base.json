@@ -159,7 +159,7 @@
             }
         }
     },
-    "Outputs": {
+     "Outputs": {
         "VPC": {
             "Value": {
                 "Ref": "VPC"
