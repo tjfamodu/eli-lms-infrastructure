@@ -16,10 +16,10 @@ templates = [
 ]
 
 templates.each do |template|
-    template "/var/canvas/#{template}.yml" do
+    template "/var/canvas/config/#{template}.yml" do
       source "#{template}.yml"
-      owner 'root'
-      mode '0755'
+      owner 'canvasuser'
+      mode '0400'
       action :create
     end
 end
