@@ -1,0 +1,7 @@
+DEPENDENCIES
+  ruby
+    path: .
+    metadata: true
+
+GRAPH
+  ruby (0.1.0)

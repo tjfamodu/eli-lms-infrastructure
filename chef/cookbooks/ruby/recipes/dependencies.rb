@@ -11,7 +11,6 @@ end
 apt_repository 'ruby-ng' do
   uri 'ppa:brightbox/ruby-ng'
   components ['main']
-  action :add
   notifies :update, 'apt_update[Ruby PPA]', :immediately
   not_if 'ruby -v'
 end
@@ -20,6 +19,3 @@ apt_update 'Ruby PPA' do
   ignore_failure true
   action :nothing
 end
-
-
-

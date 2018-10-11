@@ -14,12 +14,13 @@ verifier:
 
 platforms:
   - name: ubuntu-16.04
+  - name: centos-7
 
 suites:
   - name: default
     run_list:
-      - recipe[ruby::default]
-    # verifier:
-      # inspec_tests:
-        # - test/integration/default
-    attributes: {}
+      - recipe[assets::default]
+    verifier:
+      inspec_tests:
+        - test/integration/default
+    attributes:
