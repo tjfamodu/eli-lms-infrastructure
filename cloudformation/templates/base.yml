@@ -56,7 +56,6 @@ Resources:
     Type: "AWS::EC2::VPC"
     Properties:
       CidrBlock:
-
         Fn::FindInMap: [Environments, Ref: Environment, VPCCidr]
       EnableDnsHostnames: "true"
       Tags:
@@ -100,6 +99,26 @@ Resources:
         Value: Private
       - Key: Role
         Value: vpc
+  PublicSubnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId:
+        Ref: VPC
+        CidrBlock:
+          Fn::FindInMap:
+            - "Environments"
+            -
+              Ref: Environment
+            - "VPCCIDR"
+        MapPublicIpOnLaunch: "true"
+        Tags:
+          -
+            Key: "Application"
+            Value:
+              Ref: "AWS::StackName"
+          -
+            Key: "Network"
+            Value: "Public"
 Outputs:
   VPC:
     Value:
