@@ -130,6 +130,11 @@ Resources:
           FromPort: 443
           ToPort: 443
           CidrIp: "0.0.0.0/0"
+        -
+          IpProtocol: tcp
+          FromPort: 25
+          ToPort: 25
+          CidrIp: "0.0.0.0/0"
       SecurityGroupIngress:
         -
           IpProtocol: tcp
@@ -151,10 +156,61 @@ Resources:
           FromPort: 22
           ToPort: 22
           CidrIp: "73.128.226.180/29"
+        -
+          IpProtocol: tcp
+          FromPort: 25
+          ToPort: 25
+          CidrIp: "0.0.0.0/0"
       VpcId: !Ref VpcId
       Tags:
       - Key: "Name"
         Value: !Join ["-", [!Ref Application, !Ref Environment]]
+  LoadBalancer:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties:
+      Scheme: internet-facing
+      Subnets:
+      - Ref: PublicSubnetA
+      - Ref: PublicSubnetB
+      LoadBalancerAttributes:
+      - Key: idle_timeout.timeout_seconds
+        Value: '50'
+      SecurityGroups:
+      - Ref: Ec2SecurityGroup
+      Tags:
+      - Key: "Name"
+        Value: !Join ["-", [!Ref Application, !Ref Environment]]
+  LoadBalancerListener:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      DefaultActions:
+       - Type: forward
+         TargetGroupArn:
+           Ref: LoadBalancerTargetGroup
+      LoadBalancerArn:
+         Ref: LoadBalancer
+      Port: 80
+      Protocol: HTTP
+  LoadBalancerTargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      HealthCheckIntervalSeconds: 60
+      UnhealthyThresholdCount: 10
+      Matcher:
+        HttpCode: '200'
+      Targets:
+      - Id:
+          Ref: EC2Instance
+        Port: 3000
+      HealthCheckPath: /
+      Name: !Join ["-", [!Ref Application, !Ref Environment]]
+      Port: 80
+      Protocol: HTTP
+      VpcId:
+        Ref: VpcId
+      TargetGroupAttributes:
+        - Key: deregistration_delay.timeout_seconds
+          Value: 60
 Outputs:
   Instance:
     Value: !Ref EC2Instance
@@ -166,3 +222,5 @@ Outputs:
     Value: !GetAtt EC2Instance.PrivateDnsName
   SecurityGroupID:
     Value: !Ref Ec2SecurityGroup
+  LoadBalancerDNS:
+    Value: !GetAtt LoadBalancer.DNSName
