@@ -9,22 +9,21 @@
     "access_key": "{{user `aws_access_key`}}",
     "secret_key": "{{user `aws_secret_key`}}",
     "region": "us-east-1",
-    "source_ami_filter": {
-      "filters": {
-      "virtualization-type": "hvm",
-      "name": "ubuntu/images/*ubuntu-xenial-16.04-amd64-server-*",
-      "root-device-type": "ebs"
-      },
-      "owners": ["self"],
-      "most_recent": true
-    },
+    "source_ami": "ami-059eeca93cf09eebd",
     "instance_type": "t3.xlarge",
     "ssh_username": "ubuntu",
-    "ami_name": "tj-canvas-test {{timestamp}}"
+    "ami_name": "canvas-eli {{timestamp}}",
+    "ami_block_device_mappings": [{
+      "device_name": "/dev/sdh",
+      "volume_size": 50
+      }],
+    "ami_description": "Pre-backed AMI with Packer for Canvas",
+    "subnet_id": "subnet-22b5b046"
   }],
   "provisioners": [{
     "type": "chef-solo",
     "cookbook_paths": ["../chef/cookbooks"],
-    "roles_path": "../chef/roles"
+    "roles_path": "../chef/roles",
+    "run_list": ["role[canvas]"]
     }]
 }
