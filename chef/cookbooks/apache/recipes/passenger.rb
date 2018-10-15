@@ -4,7 +4,7 @@
 #
 # Copyright:: 2018, The Authors, All Rights Reserved.
 
-package %w(dirmngr gnupg apt-transport-https ca-certificates apache2) do
+package %w(dirmngr gnupg apt-transport-https ca-certificates apache2 apache2-dev) do
   action :install
 end
 
