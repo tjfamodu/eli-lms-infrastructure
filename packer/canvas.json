@@ -9,8 +9,16 @@
     "access_key": "{{user `aws_access_key`}}",
     "secret_key": "{{user `aws_secret_key`}}",
     "region": "us-east-1",
-    "source_ami": "ami-059eeca93cf09eebd",
-    "instance_type": "t3.xlarge",
+    "source_ami_filter": {
+      "filters": {
+        "virtualization-type": "hvm",
+        "name": "ubuntu/images/*ubuntu-xenial-16.04-amd64-server-*",
+        "root-device-type": "ebs"
+      },
+      "owners": ["aws-marketplace"],
+      "most_recent": true
+    },
+    "instance_type": "t3.small",
     "ssh_username": "ubuntu",
     "ami_name": "canvas-eli {{timestamp}}",
     "ami_block_device_mappings": [{
