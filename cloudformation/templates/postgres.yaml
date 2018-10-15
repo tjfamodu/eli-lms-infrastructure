@@ -1,0 +1,122 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Postgres database for Canvas
+# Metadata:
+#   Role: network
+Parameters:
+  Environment:
+    Description: "Enter shared, dev1, devf, mint, demo, stge, prod. Default is mint."
+    Type: String
+    Default: mint
+    AllowedPattern: ^(shared|dev|production|staging|demo|mint|int-[a-z]+)$
+  Application:
+    Description: "Enter Application name"
+    Type: String
+  DBAllocatedStorage:
+    Description: "Enter the allocated storage size"
+    Type: String
+  DBInstanceType:
+    Description: "The name of the compute and memory capacity classes of the DB instance."
+    Type: String
+  DBName:
+    Description: "Enter the name of the database"
+    Type: String
+  DBUser:
+    Description: "Enter the master username for the DB instance"
+    Type: String
+  DBPassword:
+    Description: "Enter the master password for the DB instance"
+    Type: String
+  DBEngine:
+    Description: "Enter the database engine"
+    Type: String
+  DBVersion:
+    Description: "Enter the version of the database engine"
+    Type: String
+  DBParameterGroup:
+    Description: "Enter the name of an existing DB parameter group or a reference to an AWS::RDS::DBParameterGroup resource"
+    Type: String
+  DBSubnetGroupName:
+    Description: "Enter a DB subnet group to associate with the DB instance"
+    Type: String
+  DBSubnetDescription:
+    Description: "Enter the description for the DB Subnet Group"
+    Type: String
+  DBPort:
+    Description: "Enter the port of the DB instance"
+    Type: String
+  VpcId:
+    Description: "Enter the ID of VPC"
+    Type: String
+  SourceSecurityGroup:
+    Description: "Enter the ID of the Amazon EC2 Security Group to allow access"
+    Type: String
+  PrivateSubnetA:
+    Description: "Enter the ID of a private subnet"
+    Type: String
+  PrivateSubnetB:
+    Description: "Enter the ID of a private subnet"
+    Type: String
+  DBGroupDescription:
+    Description: "Enter description of RDS security group"
+    Type: String
+Resources:
+  DBSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: !Ref DBGroupDescription
+      Tags:
+      - Key: Name
+        Value: !Join ["-", [!Ref Application, !Ref Environment, "rds"]]
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+        - IpProtocol: "tcp"
+          FromPort: !Ref DBPort
+          ToPort: !Ref DBPort
+          SourceSecurityGroupId: !Ref SourceSecurityGroup
+      SecurityGroupEgress:
+        -
+          IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: "0.0.0.0/0"
+        -
+          IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: "0.0.0.0/0"
+  DBInstance:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBInstanceIdentifier: !Ref DBInstanceType
+      AllocatedStorage: !Ref DBAllocatedStorage
+      DBInstanceClass: !Ref DBInstanceType
+      DBInstanceIdentifier: !Join ["", [!Ref Application, !Ref Environment]]
+      DBName: !Ref DBName
+      Engine: !Ref DBEngine
+      EngineVersion: !Ref DBVersion
+      MasterUsername: !Ref DBUser
+      MasterUserPassword: !Ref DBPassword
+      PubliclyAccessible: false
+      DBSubnetGroupName: !Ref DBSubnetGroupName
+      DBParameterGroupName: !Ref DBParameterGroup
+      VPCSecurityGroups:
+        - !Ref DBSecurityGroup
+    DeletionPolicy: "Snapshot"
+  DBSubnetGroup:
+    Type: "AWS::RDS::DBSubnetGroup"
+    Properties:
+      DBSubnetGroupDescription: !Ref DBSubnetDescription
+      DBSubnetGroupName: !Ref DBSubnetGroupName
+      SubnetIds:
+        - !Ref PrivateSubnetA
+        - !Ref PrivateSubnetB
+Outputs:
+  DBInstance:
+    Value: !Ref DBInstance
+  DBSecurityGroup:
+    Value: !Ref DBSecurityGroup
+  DBEndpoint:
+    Value: !GetAtt DBInstance.Endpoint.Address
+  DBEndpointPort:
+    Value: !GetAtt DBInstance.Endpoint.Port
