@@ -1,0 +1,53 @@
+namespace: ${namespace}
+
+stacker_bucket: ${namespace}-cfts
+domain_name: &domain eli.fearless.tech
+
+stacks:
+  - name: vpc
+    template_path: templates/vpc.yaml
+    enabled: true
+    variables:
+      Environment: ${env}
+      DomainName: *domain
+      CIDR: ${cidr_block}
+      Application: ${app}
+  - name: ec2
+    template_path: templates/ec2.yaml
+    enabled: true
+    variables:
+      DomainName: *domain
+      Environment: ${env}
+      Application: ${app}
+      EC2GroupDescription: ${ec2_group_description}
+      DBPort: 5432
+      ImageId: ${image_id}
+      InstanceType: ${ec2_instance_type}
+      EC2GroupName: ${ec2_group_name}
+      VpcId: ${output vpc::VpcId}
+      PublicSubnetA:  ${output vpc::PublicSubnetA}
+      PublicSubnetB:  ${output vpc::PublicSubnetB}
+      CIDR: ${cidr_block}
+      KeyPair: ${key_pair}
+  - name: postgres
+    template_path: templates/postgres.yaml
+    enabled: true
+    variables:
+      Environment: ${env}
+      Application: ${app}
+      DBAllocatedStorage: ${db_allocated_storage}
+      DBInstanceType: ${db_instance_type}
+      DBUser: ${db_username}
+      DBPassword: ${db_password}
+      DBName: ${db_name}
+      DBEngine: postgres
+      DBVersion: 10.5
+      DBParameterGroup: default.postgres10
+      DBSubnetGroupName: ${db_subnet_group_name}
+      DBSubnetDescription: ${db_subnet_description}
+      DBGroupDescription: ${db_security_group_description}
+      DBPort: 5432
+      VpcId: ${output vpc::VpcId}
+      SourceSecurityGroup: ${output ec2::SecurityGroupID}
+      PrivateSubnetA: ${output vpc::PrivateSubnetA}
+      PrivateSubnetB: ${output vpc::PrivateSubnetB}
