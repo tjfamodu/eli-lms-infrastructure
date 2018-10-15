@@ -1,0 +1,168 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: EC2 and Subnet definitions
+Parameters:
+  VpcId:
+    Description: "Enter the ID of VPC"
+    Type: String
+  PublicSubnetA:
+    Description: "Enter the ID of the subnet that you want to launch the instance into"
+    Type: String
+  PublicSubnetB:
+    Description: "Enter the ID of the subnet that you want to launch the instance into"
+    Type: String
+  ImageId:
+    Description: "Enter the unique ID of the Amazon Machine Image"
+    Type: String
+  InstanceType:
+    Description: "Enter EC2 instance type"
+    Type: String
+  EC2GroupName:
+    Description: "Enter name of EC2 security group"
+    Type: String
+  EC2GroupDescription:
+    Description: "Enter a description of the security group"
+    Type: String
+  Environment:
+    Description: "Enter shared, dev1, devf, mint, demo, stge, prod. Default is mint."
+    Type: String
+    Default: mint
+    AllowedPattern: ^(shared|dev|production|staging|demo|mint|int-[a-z]+)$
+  Application:
+    Description: "Enter Application name"
+    Type: String
+  CIDR:
+    Description: "Enter the VPC's cidr block"
+    Type: String
+  KeyPair:
+    Description: "Enter name of EC2 key pair"
+    Type: String
+Resources:
+  ManagedInstanceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - ssm.amazonaws.com
+            - ec2.amazonaws.com
+          Action: sts:AssumeRole
+      ManagedPolicyArns:
+      - arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM
+      Path: "/"
+  ManagedInstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Path: "/"
+      Roles:
+      - !Ref ManagedInstanceRole
+      InstanceProfileName: ManagedInstanceProfile
+  AutomationServiceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - ssm.amazonaws.com
+            - ec2.amazonaws.com
+          Action: sts:AssumeRole
+      ManagedPolicyArns:
+      - arn:aws:iam::aws:policy/service-role/AmazonSSMAutomationRole
+      Path: "/"
+      RoleName: AutomationServiceRole
+      Policies:
+      - PolicyName: passrole
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+          - Effect: Allow
+            Action:
+            - iam:PassRole
+            Resource:
+            - !GetAtt ManagedInstanceRole.Arn
+  EC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: !Ref ImageId
+      InstanceType: !Ref InstanceType
+      IamInstanceProfile: !Ref ManagedInstanceProfile
+      KeyName: !Ref KeyPair
+      SecurityGroupIds:
+      - !Ref Ec2SecurityGroup
+      SubnetId: !Ref PublicSubnetA
+      BlockDeviceMappings:
+      -
+        DeviceName: /dev/sda1
+        Ebs:
+          VolumeSize: 60
+      Tags:
+      - Key: "Name"
+        Value: !Join ["-", [!Ref Application, !Ref Environment]]
+  Ec2SecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: !Ref EC2GroupName
+      GroupDescription: !Ref EC2GroupDescription
+      SecurityGroupEgress:
+        -
+          IpProtocol: tcp
+          FromPort: 5432
+          ToPort: 5432
+          CidrIp: !Ref CIDR
+        -
+          IpProtocol: tcp
+          FromPort: 3000
+          ToPort: 3000
+          CidrIp: "0.0.0.0/0"
+        -
+          IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: "0.0.0.0/0"
+        -
+          IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: "0.0.0.0/0"
+      SecurityGroupIngress:
+        -
+          IpProtocol: tcp
+          FromPort: 3000
+          ToPort: 3000
+          CidrIp: "0.0.0.0/0"
+        -
+          IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: "0.0.0.0/0"
+        -
+          IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: "0.0.0.0/0"
+        -
+          IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: "73.128.226.180/29"
+      VpcId: !Ref VpcId
+      Tags:
+      - Key: "Name"
+        Value: !Join ["-", [!Ref Application, !Ref Environment]]
+Outputs:
+  Instance:
+    Value: !Ref EC2Instance
+  AvailabilityZone:
+    Value: !GetAtt EC2Instance.AvailabilityZone
+  PublicDNS:
+    Value: !GetAtt EC2Instance.PublicDnsName
+  PrivateDNS:
+    Value: !GetAtt EC2Instance.PrivateDnsName
+  SecurityGroupID:
+    Value: !Ref Ec2SecurityGroup
