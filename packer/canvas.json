@@ -20,6 +20,7 @@
     "region": "us-east-1",
     "instance_type": "t3.small",
     "ssh_username": "ubuntu",
+    "source_ami": "{{user `ami_base`}}",
     "ami_name": "{{user `ami_name`}} {{timestamp}}",
     "ami_block_device_mappings": [{
       "device_name": "/dev/sdh",
