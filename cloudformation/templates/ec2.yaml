@@ -132,8 +132,8 @@ Resources:
           CidrIp: "0.0.0.0/0"
         -
           IpProtocol: tcp
-          FromPort: 25
-          ToPort: 25
+          FromPort: 587
+          ToPort: 587
           CidrIp: "0.0.0.0/0"
       SecurityGroupIngress:
         -
@@ -153,13 +153,20 @@ Resources:
           CidrIp: "0.0.0.0/0"
         -
           IpProtocol: tcp
+          Description: "Cloud9"
           FromPort: 22
           ToPort: 22
-          CidrIp: "73.128.226.180/29"
+          CidrIp: "35.172.155.96/27"
         -
           IpProtocol: tcp
-          FromPort: 25
-          ToPort: 25
+          Description: "Cloud9"
+          FromPort: 22
+          ToPort: 22
+          CidrIp: "35.172.155.192/27"
+        -
+          IpProtocol: tcp
+          FromPort: 587
+          ToPort: 587
           CidrIp: "0.0.0.0/0"
       VpcId: !Ref VpcId
       Tags:
