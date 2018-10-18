@@ -34,5 +34,6 @@ workflows:
     jobs:
       - validate
       - build-base:
+          context: CircleCiPacker
           requires:
             - validate
