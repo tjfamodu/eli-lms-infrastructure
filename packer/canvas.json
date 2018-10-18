@@ -9,7 +9,7 @@
   ],
   "variables": {
     "ami_name": "canvas-eli-fearless",
-    "ami_base": "aami-0735ea082a1534cac"
+    "ami_base": "ami-0735ea082a1534cac"
   },
   "builders": [{
     "type": "amazon-ebs",
