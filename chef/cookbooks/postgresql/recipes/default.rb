@@ -4,8 +4,6 @@
 #
 # Copyright:: 2018, The Authors, All Rights Reserved.
 
-include_recipe 'postgresql'
-
 postgresql_server_install 'My PostgreSQL Server install' do
   action :install
 end
@@ -26,6 +24,13 @@ postgresql_database 'canvas_test' do
   owner 'canvas'
 end
 
-postgresql_server_conf 'PostgreSQL Config' do
-  notifies :reload, service['postgresql']
+find_resource(:service, 'postgresql') do
+  extend PostgresqlCookbook::Helpers
+  service_name lazy { platform_service_name }
+  supports restart: true, status: true, reload: true
+  action [:enable, :start]
 end
+
+# postgresql_server_conf 'PostgreSQL Config' do
+#   notifies :reload, service['postgresql']
+# end

@@ -9,6 +9,6 @@ run_list(
     "recipe[apache]",
     "recipe[assets]",
     "recipe[canvas]",
-    "recipe[postgres]",
+    "recipe[postgresql]",
     "recipe[redis]"
   )

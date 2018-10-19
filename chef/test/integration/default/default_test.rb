@@ -25,6 +25,11 @@ describe package ('postgresql') do
   its('version') { should cmp >= '9.5'}
 end
 
+describe package ('redis-server') do
+  it { should be_installed }
+  its('version') { should cmp >= '2.6'}
+end
+
 %w{ amazon_s3 database delayed_jobs domain file_store outgoing_mail security external_migration redis cache_store }.each do |config|
   describe file("/var/canvas/config/#{config}.yml") do
     it { should exist }

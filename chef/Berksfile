@@ -1,7 +1,7 @@
 source "https://supermarket.chef.io"
-cookbook "chef-client"
+# metadata
+cookbook 'chef-client'
 cookbook 'apache2', '~> 5.0.1'
-cookbook 'postgresql', '~> 7.1.1'
 cookbook 'opsworks-audit', '~> 1.0.0', path: 'site-cookbooks/opsworks-audit' # optional
 # cookbook 'ssh-hardening'
 
@@ -12,5 +12,6 @@ cookbook 'git', path: 'cookbooks/git'
 cookbook 'nodejs', path: 'cookbooks/nodejs'
 cookbook 'python', path: 'cookbooks/python'
 cookbook 'ruby', path: 'cookbooks/ruby'
-cookbook 'postgres', path: 'cookbooks/postgres'
+cookbook 'postgresql', path: 'cookbooks/postgresql'
+# cookbook 'postgres', path: 'cookbooks/postgres'
 cookbook 'redis', path: 'cookbooks/redis'

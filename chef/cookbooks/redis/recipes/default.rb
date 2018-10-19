@@ -12,10 +12,10 @@ execute 'sudo apt-get update' do
   action :run
 end
 
-apt_package 'redis' do
+apt_package 'redis-server' do
   action :install
 end
 
-service "redis" do
-  action :enable, :start
+service "redis-server" do
+  action [:enable, :start]
 end

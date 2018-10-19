@@ -13,9 +13,8 @@ DEPENDENCIES
     path: cookbooks/nodejs
   opsworks-audit
     path: site-cookbooks/opsworks-audit
-  postgres
-    path: cookbooks/postgres
-  postgresql (~> 7.1.1)
+  postgresql
+    path: cookbooks/postgresql
   python
     path: cookbooks/python
   redis
@@ -38,8 +37,6 @@ GRAPH
   nodejs (0.1.0)
   opsworks-audit (1.0.0)
     audit (>= 0.0.0)
-  postgres (0.1.0)
-    postgresql (~> 7.1.1)
   postgresql (7.1.1)
   python (0.1.0)
   redis (0.1.0)
