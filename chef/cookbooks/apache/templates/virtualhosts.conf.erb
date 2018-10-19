@@ -9,7 +9,7 @@
   ErrorLog /var/log/apache2/canvas_errors.log
   LogLevel warn
   CustomLog /var/log/apache2/canvas_access.log combined
-  SetEnv RAILS_ENV production
+  SetEnv RAILS_ENV <%= node['environment'] %>
   <Directory <%= node['apache']['virtualhosts']['document_root'] %>>
     Options All
     AllowOverride All
