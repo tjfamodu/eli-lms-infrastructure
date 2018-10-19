@@ -13,8 +13,13 @@ DEPENDENCIES
     path: cookbooks/nodejs
   opsworks-audit
     path: site-cookbooks/opsworks-audit
+  postgres
+    path: cookbooks/postgres
+  postgresql (~> 7.1.1)
   python
     path: cookbooks/python
+  redis
+    path: cookbooks/redis
   ruby
     path: cookbooks/ruby
 
@@ -24,7 +29,7 @@ GRAPH
   assets (0.1.0)
   audit (7.3.0)
   canvas (0.1.0)
-  chef-client (11.0.1)
+  chef-client (11.0.2)
     cron (>= 4.2.0)
     logrotate (>= 1.9.0)
   cron (6.2.1)
@@ -33,5 +38,9 @@ GRAPH
   nodejs (0.1.0)
   opsworks-audit (1.0.0)
     audit (>= 0.0.0)
+  postgres (0.1.0)
+    postgresql (~> 7.1.1)
+  postgresql (7.1.1)
   python (0.1.0)
+  redis (0.1.0)
   ruby (0.1.0)
