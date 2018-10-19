@@ -8,5 +8,7 @@ run_list(
     "recipe[nodejs]",
     "recipe[apache]",
     "recipe[assets]",
-    "recipe[canvas]"
+    "recipe[canvas]",
+    "recipe[postgres]",
+    "recipe[redis]"
   )

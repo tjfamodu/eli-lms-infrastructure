@@ -12,7 +12,9 @@ templates = [
     'external_migration',
     'file_store',
     'outgoing_mail',
-    'security'
+    'security',
+    'redis',
+    'cache_store'
 ]
 
 templates.each do |template|

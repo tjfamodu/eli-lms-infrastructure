@@ -20,7 +20,12 @@ describe package ('python') do
   it { should be_installed }
 end
 
-%w{ amazon_s3 database delayed_jobs domain file_store outgoing_mail security external_migration }.each do |config|
+describe package ('postgresql') do
+  it { should be_installed }
+  its('version') { should cmp >= '9.5'}
+end
+
+%w{ amazon_s3 database delayed_jobs domain file_store outgoing_mail security external_migration redis cache_store }.each do |config|
   describe file("/var/canvas/config/#{config}.yml") do
     it { should exist }
     its('mode') { should cmp '00400'}
