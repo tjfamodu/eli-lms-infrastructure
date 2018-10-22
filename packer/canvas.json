@@ -7,9 +7,10 @@
     "curl -sSL 'https://cloud-images.ubuntu.com/query/xenial/server/released.current.txt' | grep us-east-1 | grep hvm | grep -e 'ebs' | awk '{print $8;}'",
     ""
   ],
-  "variables": {
-    "ami_name": "canvas-eli-fearless",
-    "ami_base": "ami-0735ea082a1534cac"
+    "variables": {
+      "ami_name": "canvas-eli-fearless",
+      "ami_base": "ami-0735ea082a1534cac",
+      "subnet_id": "subnet-22b5b046"
   },
   "builders": [{
     "type": "amazon-ebs",
@@ -31,12 +32,14 @@
       "ami-create": "{{user `ami_name`}}"
     },
     "ami_description": "Pre-backed AMI with Packer for Canvas",
-    "subnet_id": "subnet-22b5b046"
+    "subnet_id": "{{ user `subnet_id`}}"
   }],
-  "provisioners": [{
-    "type": "chef-solo",
-    "cookbook_paths": ["./chef/cookbooks"],
-    "roles_path": "./chef/roles",
-    "run_list": ["role[canvas]"]
-    }]
+  "provisioners": [
+    {
+      "type": "chef-solo",
+      "cookbook_paths": ["./chef/cookbooks"],
+      "roles_path": "./chef/roles",
+      "run_list": ["role[canvas]"]
+    }
+  ]
 }

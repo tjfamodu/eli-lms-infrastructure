@@ -1,25 +1,23 @@
 # do not create a queue: section for your test environment
-test:
+default: &default
   adapter: postgresql
-  encoding: utf8
-  database: canvas_test
-  host: localhost
-  username: canvas
+  encoding: unicode
+  username: <%= ENV['POSTGRES_USER'] %>
+  password: <%= ENV['POSTGRES_PASSWORD'] %>
+  pool: 5
   timeout: 5000
 
 development:
-  adapter: postgresql
-  encoding: utf8
+  <<: *default
   database: canvas_development
   host: localhost
-  username: canvas
-  timeout: 5000
+
+test:
+  <<: *default
+  database: canvas_test
+  host: <%= ENV['POSTGRES_TEST_HOST'] %>
 
 production:
-  adapter: postgresql
-  encoding: utf8
+  <<: *default
   database: canvas_production
-  host: localhost
-  username: canvas
-  password: your_password
-  timeout: 5000
+  host: <%= ENV['POSTGRES_HOST'] %>

@@ -21,19 +21,15 @@ jobs:
       - run:
           name: Build Canvas AMI
           command: packer build ./packer/canvas.json
+          environment:
+            POSTGRES_USER: $POSTGRES_USER
+            POSTGRES_DB: $POSTGRES_DATABASE
           no_output_timeout: 30m
-      # - persist_to_workspace:
-      #     root: .
-      #     paths:
-      #       - manifest-canvas.json
-      # - store_artifacts:
-      #     path: manifest-canvas.json
 workflows:
   version: 2
   build-and-deploy:
     jobs:
       - validate
       - build-base:
-          # context: CircleCiPacker
           requires:
             - validate

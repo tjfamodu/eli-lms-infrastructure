@@ -20,7 +20,7 @@ templates = [
 templates.each do |template|
     template "/var/canvas/config/#{template}.yml" do
       source "#{template}.yml"
-      owner 'canvasuser'
+      owner 'ubuntu'
       mode '0400'
       action :create
     end
