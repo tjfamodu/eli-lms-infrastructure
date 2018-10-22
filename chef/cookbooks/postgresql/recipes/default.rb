@@ -14,16 +14,6 @@ postgresql_server_install 'Setup my PostgreSQL 9.5 server' do
   action :create
 end
 
-postgresql_user 'canvas' do
-  password 'UserP4ssword'
-  createdb false
-  createrole false
-end
-
-postgresql_database 'canvas_test' do
-  owner 'canvas'
-end
-
 find_resource(:service, 'postgresql') do
   extend PostgresqlCookbook::Helpers
   service_name lazy { platform_service_name }
